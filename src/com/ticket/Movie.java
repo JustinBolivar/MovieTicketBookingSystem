@@ -17,7 +17,6 @@ public class Movie {
 
     /**
      * Constructor of the Movie class used to set the values of the fields.
-     * 
      * @param times
      * @param availableTicket
      */
@@ -30,7 +29,6 @@ public class Movie {
 
     /**
      * getter for the time field.
-     * 
      * @return time
      */
     public String getTime() {
@@ -39,27 +37,31 @@ public class Movie {
 
     /**
      * getter for the availableTickets field.
-     * 
      * @return availableTickets
      */
     public int getAvailableTickets() {
         return availableTickets;
     }
-
-    public void setAvailableTickets(int availableTickets) {
-        this.availableTickets = availableTickets;
+    /**
+     * setter for availabilityTicket field.
+     * @param availableTicket
+     */
+    public void setAvailableTickets(final int availableTicket) {
+        this.availableTickets = availableTicket;
     }
 
     /**
      * getter for the bookedTickets field.
-     * 
      * @return bookedTickets
      */
     public int getBookedTickets() {
         return bookedTickets;
     }
-
-    public void setBookedTickets(int bookedTickets) {
-        this.bookedTickets = bookedTickets;
+    /**
+     * setter for the bookedTickets field.
+     * @param bookedTicket
+     */
+    public void setBookedTickets(final int bookedTicket) {
+        this.bookedTickets = bookedTicket;
     }
 }
