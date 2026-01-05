@@ -9,5 +9,4 @@ public class Movie {
         this.time = time;
         this.availableTickets = availableTickets;
     }
-
 }
