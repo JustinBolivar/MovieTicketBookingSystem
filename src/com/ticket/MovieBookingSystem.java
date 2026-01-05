@@ -3,34 +3,55 @@ package com.ticket;
 import java.util.ArrayList;
 
 public class MovieBookingSystem extends BookingSystem {
+    /**
+     * Array list of movie showTimes.
+     */
     private ArrayList<Movie> showTimes;
 
+    /**
+     * Create default set of movie schedule.
+     */
     public MovieBookingSystem() {
+        final int capacity = 50;
         showTimes = new ArrayList<>();
-        showTimes.add(new Movie("10:00 AM", 20));
-        showTimes.add(new Movie("12:00 PM", 40));
-        showTimes.add(new Movie("1:00 PM", 30));
-        showTimes.add(new Movie("04:00 PM", 25));
-        showTimes.add(new Movie("08:00 PM", 10));
+        showTimes.add(new Movie("10:00 AM", capacity));
+        showTimes.add(new Movie("12:00 PM", capacity));
+        showTimes.add(new Movie("1:00 PM", capacity));
+        showTimes.add(new Movie("04:00 PM", capacity));
+        showTimes.add(new Movie("08:00 PM", capacity));
     }
 
-    public void checkAvailability(String showTime) {
+    /**
+     * Function to check the availability of a specific movie schedule.
+     * @param showTime
+     */
+    public void checkAvailability(final String showTime) {
         for (Movie show : showTimes) {
-            if (show.time.equals(showTime)) {
-                System.out.println("Available Tickets for " + show.time
-                        + "  is : " + show.availableTickets);
+            if (show.getTime().equals(showTime)) {
+                System.out.println("Available Tickets for " + show.getTime()
+                        + "  is : " + show.getAvailableTickets());
             }
         }
     }
 
-    public void bookTicket(String showTime, int tickets) {
+    /**
+     * Function to book specific number of tickets for a specific movie
+     * schedule.
+     * @param showTime
+     * @param tickets
+     */
+    public void bookTicket(final String showTime, final int tickets) {
         for (Movie show : showTimes) {
-            if (show.time.equals(showTime)) {
-                if (show.availableTickets >= tickets) {
-                    show.availableTickets -= tickets;
-                    show.bookedTickets += tickets;
+            if (show.getTime().equals(showTime)) {
+                if (show.getAvailableTickets() >= tickets) {
+                    int newAvailable = show.getAvailableTickets() - tickets;
+                    int newBooked = show.getBookedTickets() + tickets;
+
+                    show.setAvailableTickets(newAvailable);
+                    show.setBookedTickets(newBooked);
+
                     System.out.println(tickets
-                            + " tickets succesfully booked for " + showTime);
+                            + " tickets successfully booked for " + showTime);
                 } else {
                     System.out.println(
                             "Not enough tickets available for this showtime!");
@@ -40,43 +61,62 @@ public class MovieBookingSystem extends BookingSystem {
         }
         System.out.println("Showtime not found.");
     }
-
-    public void cancelReservation(String showTime, int tickets) {
+    /**
+     * Function to cancel the previously booked tickets for a certain
+     * movie schedule.
+     * @param showTime
+     * @param tickets
+     */
+    public void cancelReservation(final String showTime, final int tickets) {
         for (Movie show : showTimes) {
-            if (show.time.equals(showTime)) {
-                if (tickets <= show.bookedTickets) {
-                    show.availableTickets += tickets;
-                    show.bookedTickets -= tickets;
+            if (show.getTime().equals(showTime)) {
+                if (tickets <= show.getBookedTickets()) {
+                    int newAvailable = show.getAvailableTickets() + tickets;
+                    int newBooked = show.getBookedTickets() - tickets;
+
+                    show.setAvailableTickets(newAvailable);
+                    show.setBookedTickets(newBooked);
                     System.out.println(tickets
                             + " tickets succesfully cancelled for " + showTime);
                 } else {
                     System.out.println(
-                            "Invalid operation (Attempt to cancel more tickets than booked)");
+                            "Invalid operation (Attempt to cancel more tickets "
+                            + "than booked)");
                 }
                 return;
             }
         }
     }
-
+    /**
+     * Function to display all the movie schedules and their available tickets.
+     */
     public void displaySchedule() {
         System.out.println("\n--- Movie Schedule ---");
         for (Movie show : showTimes) {
-            System.out.println("Time: " + show.time + " | Seats Available: "
-                    + show.availableTickets);
+            System.out.println("Time: " + show.getTime()
+                    + " | Seats Available: " + show.getAvailableTickets());
         }
         System.out.println("\n----------------------");
     }
 
-    public static void main(String[] args) {
+    /**
+     * main function to test and run program.
+     * @param args
+     */
+    public static void main(final String[] args) {
         MovieBookingSystem movie = new MovieBookingSystem();
         movie.displaySchedule();
         String time = "10:00 AM";
         String time2 = "1:00 PM";
-        movie.bookTicket(time, 5);
-        movie.bookTicket(time, 100);
-        movie.cancelReservation(time, 3);
-        movie.bookTicket(time2, 2);
-        movie.cancelReservation(time, 5);
+        final int tickets = 5;
+        final int tickets2 = 2;
+        final int tickets3 = 3;
+        final int over = 100;
+        movie.bookTicket(time, tickets);
+        movie.bookTicket(time, over);
+        movie.cancelReservation(time, tickets3);
+        movie.bookTicket(time2, tickets2);
+        movie.cancelReservation(time, tickets);
 
     }
 }
