@@ -23,6 +23,7 @@ public class MovieBookingSystem extends BookingSystem {
 
     /**
      * getter for the movies to be accessible in the unit test.
+     * 
      * @param time
      * @return null
      */
@@ -37,6 +38,7 @@ public class MovieBookingSystem extends BookingSystem {
 
     /**
      * Function to check the availability of a specific movie schedule.
+     * 
      * @param showTime
      */
     public void checkAvailability(final String showTime) {
@@ -51,10 +53,19 @@ public class MovieBookingSystem extends BookingSystem {
     /**
      * Function to book specific number of tickets for a specific movie
      * schedule.
+     * 
      * @param showTime
      * @param tickets
      */
     public void bookTicket(final String showTime, final int tickets) {
+        String timeRegex = "^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$";
+
+        if (!showTime.matches(timeRegex)) {
+            System.out.println(
+                    "Invalid time format. Please use 'HH:MM AM/PM' (e.g., 05:30 PM).");
+            return;
+        }
+
         for (Movie show : showTimes) {
             if (show.getTime().equals(showTime)) {
                 if (show.getAvailableTickets() >= tickets) {
@@ -66,6 +77,8 @@ public class MovieBookingSystem extends BookingSystem {
 
                     System.out.println(tickets
                             + " tickets successfully booked for " + showTime);
+                } else if (show.getAvailableTickets() == 0) {
+                    System.out.println("Tickets are sold out!");
                 } else {
                     System.out.println(
                             "Not enough tickets available for this showtime!");
@@ -79,10 +92,19 @@ public class MovieBookingSystem extends BookingSystem {
     /**
      * Function to cancel the previously booked tickets for a certain movie
      * schedule.
+     * 
      * @param showTime
      * @param tickets
      */
     public void cancelReservation(final String showTime, final int tickets) {
+        String timeRegex = "^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$";
+
+        if (!showTime.matches(timeRegex)) {
+            System.out.println(
+                    "Invalid time format. Please use 'HH:MM AM/PM' (e.g., 05:30 PM).");
+            return;
+        }
+
         for (Movie show : showTimes) {
             if (show.getTime().equals(showTime)) {
                 if (tickets <= show.getBookedTickets()) {
@@ -91,20 +113,23 @@ public class MovieBookingSystem extends BookingSystem {
 
                     show.setAvailableTickets(newAvailable);
                     show.setBookedTickets(newBooked);
-                    System.out.println(tickets
-                            + " tickets succesfully cancelled for " + showTime);
+                    System.out.println(
+                            tickets + " tickets successfully cancelled for "
+                                    + showTime);
+                    return;
                 } else {
                     System.out.println(
-                            "Invalid operation (Attempt to cancel more tickets "
-                                    + "than booked)");
+                            "Invalid operation (Attempt to cancel more tickets than booked)");
+                    return;
                 }
             }
         }
-        return;
+        System.out.println("Show time " + showTime + " not found.");
     }
 
     /**
      * Main function to test and run program.
+     * 
      * @param args
      */
     public static void main(final String[] args) {
