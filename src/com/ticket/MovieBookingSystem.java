@@ -22,8 +22,21 @@ public class MovieBookingSystem extends BookingSystem {
     }
 
     /**
+     * getter for the movies to be accessible in the unit test.
+     * @param time
+     * @return null
+     */
+    public Movie getMovie(final String time) {
+        for (Movie m : showTimes) {
+            if (m.getTime().equals(time)) {
+                return m;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Function to check the availability of a specific movie schedule.
-     * 
      * @param showTime
      */
     public void checkAvailability(final String showTime) {
@@ -38,7 +51,6 @@ public class MovieBookingSystem extends BookingSystem {
     /**
      * Function to book specific number of tickets for a specific movie
      * schedule.
-     * 
      * @param showTime
      * @param tickets
      */
@@ -67,7 +79,6 @@ public class MovieBookingSystem extends BookingSystem {
     /**
      * Function to cancel the previously booked tickets for a certain movie
      * schedule.
-     * 
      * @param showTime
      * @param tickets
      */
@@ -93,24 +104,23 @@ public class MovieBookingSystem extends BookingSystem {
     }
 
     /**
-     * main function to test and run program.
-     * 
+     * Main function to test and run program.
      * @param args
      */
     public static void main(final String[] args) {
         MovieBookingSystem movie = new MovieBookingSystem();
-        String time = "10:00 AM";
-        String time2 = "1:00 PM";
-        final int tickets = 5;
-        final int tickets2 = 2;
-        final int tickets3 = 3;
+        String am = "10:00 AM";
+        String pm = "1:00 PM";
+        final int ticket = 5;
+        final int ticket2 = 2;
+        final int ticket3 = 3;
         final int over = 100;
-        movie.checkAvailability(time);
-        movie.bookTicket(time, tickets);
-        movie.bookTicket(time, over);   
-        movie.cancelReservation(time, tickets3);
-        movie.bookTicket(time2, tickets2);
-        movie.cancelReservation(time, tickets);
+        movie.checkAvailability(am);
+        movie.bookTicket(am, ticket);
+        movie.bookTicket(am, over);
+        movie.cancelReservation(am, ticket3);
+        movie.bookTicket(pm, ticket2);
+        movie.cancelReservation(am, ticket);
 
     }
 }
