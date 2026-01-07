@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
@@ -116,6 +118,15 @@ class TestMovieTicketBookingSystem {
         assertTrue(
                 outputStreamCaptor.toString().contains("Showtime not found."));
     }
+    
+    @Test
+    void testCancelReservation_CancelInvalidAmountOfTickets_ShouldReturnTrue()
+            throws Exception {
+        String time = "8:00 PM";
+        system.cancelReservation(time, -5);
+        assertTrue(
+                outputStreamCaptor.toString().contains("Invalid number of Tickets"));
+    }
 
     @Test
     void testMain() {
@@ -124,6 +135,39 @@ class TestMovieTicketBookingSystem {
 
         int result = 1;
         assertEquals(expectedResult, result, () -> "Main Test");
+    }
+
+    @Test
+    void testDisplayAllShowTimes_EmptyList_ShouldPrintNoShowtimesMessage()
+            throws Exception {
+        Field field = MovieBookingSystem.class.getDeclaredField("showTimes");
+        field.setAccessible(true);
+        ArrayList<?> showTimesList = (ArrayList<?>) field.get(system);
+        showTimesList.clear();
+
+        system.displayAllShowTimes();
+
+        String output = outputStreamCaptor.toString().trim();
+        assertTrue(output.contains("No showtimes available."),
+                "Should display the empty list message when showTimes is empty");
+    }
+
+    @Test
+    void testGetMovie_ExistingTime_ShouldReturnMovieObject() {
+        String existingTime = "10:00 AM";
+        Movie result = system.getMovie(existingTime);
+        assertNotNull(result,
+                "Should return a Movie object for an existing showtime");
+        assertEquals(existingTime, result.getTime(),
+                "Returned movie should have the matching time");
+    }
+
+    @Test
+    void testGetMovie_NonExistingTime_ShouldReturnNull() {
+        String nonExistingTime = "11:11 PM";
+        Movie result = system.getMovie(nonExistingTime);
+        assertNull(result,
+                "Should return null when the showtime does not exist in the list");
     }
 
 }

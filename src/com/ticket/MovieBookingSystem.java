@@ -57,15 +57,15 @@ public class MovieBookingSystem extends BookingSystem {
     public void bookTicket(final String showTime, final int tickets) {
         String timeRegex = "^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$";
 
+        // negative
         if (!showTime.matches(timeRegex)) {
-            System.out.println(
-                    "Invalid time format. Please use "
+            System.out.println("Invalid time format. Please use "
                     + "'HH:MM AM/PM' (e.g., 05:30 PM).");
             return;
         }
 
         for (Movie show : showTimes) {
-            if (show.getTime().equals(showTime)) {
+            if (show.getTime().equals(showTime) && checkValidTicket(tickets) == true) {
                 if (show.getAvailableTickets() >= tickets) {
                     int newAvailable = show.getAvailableTickets() - tickets;
                     int newBooked = show.getBookedTickets() + tickets;
@@ -84,7 +84,11 @@ public class MovieBookingSystem extends BookingSystem {
                 return;
             }
         }
-        System.out.println("Showtime not found.");
+        if (checkValidTicket(tickets) == false) {
+            System.out.println("Invalid number of Tickets");
+        } else {
+            System.out.println("Showtime not found.");
+        }
     }
 
     /**
@@ -95,16 +99,16 @@ public class MovieBookingSystem extends BookingSystem {
      */
     public void cancelReservation(final String showTime, final int tickets) {
         String timeRegex = "^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$";
+        //
 
         if (!showTime.matches(timeRegex)) {
-            System.out.println(
-                    "Invalid time format. Please use "
+            System.out.println("Invalid time format. Please use "
                     + "'HH:MM AM/PM' (e.g., 05:30 PM).");
             return;
         }
 
         for (Movie show : showTimes) {
-            if (show.getTime().equals(showTime)) {
+            if (show.getTime().equals(showTime) && checkValidTicket(tickets) == true) {
                 if (tickets <= show.getBookedTickets()) {
                     int newAvailable = show.getAvailableTickets() + tickets;
                     int newBooked = show.getBookedTickets() - tickets;
@@ -116,14 +120,17 @@ public class MovieBookingSystem extends BookingSystem {
                                     + showTime);
                     return;
                 } else {
-                    System.out.println(
-                            "Invalid operation (Attempt to cancel "
+                    System.out.println("Invalid operation (Attempt to cancel "
                             + "more tickets than booked)");
                     return;
                 }
             }
         }
-        System.out.println("Showtime not found.");
+        if (checkValidTicket(tickets) == false) {
+            System.out.println("Invalid number of Tickets");
+        } else {
+            System.out.println("Showtime not found.");
+        }
     }
 
     /**
@@ -140,6 +147,14 @@ public class MovieBookingSystem extends BookingSystem {
                     + " | Available Seats: " + show.getAvailableTickets());
         }
         System.out.println("------------------------------\n");
+    }
+
+    public boolean checkValidTicket(int num) {
+        if (num > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -169,5 +184,8 @@ public class MovieBookingSystem extends BookingSystem {
         movie.bookTicket(notExist, ticket);
         movie.cancelReservation(notExist, ticket);
         movie.displayAllShowTimes();
+
+        movie.bookTicket("10:00 AM", -8); // dawat negative
+
     }
 }
