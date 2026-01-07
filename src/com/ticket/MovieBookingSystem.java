@@ -65,7 +65,8 @@ public class MovieBookingSystem extends BookingSystem {
         }
 
         for (Movie show : showTimes) {
-            if (show.getTime().equals(showTime) && checkValidTicket(tickets) == true) {
+            if (show.getTime().equals(showTime)
+                    && checkValidTicket(tickets)) {
                 if (show.getAvailableTickets() >= tickets) {
                     int newAvailable = show.getAvailableTickets() - tickets;
                     int newBooked = show.getBookedTickets() + tickets;
@@ -84,7 +85,7 @@ public class MovieBookingSystem extends BookingSystem {
                 return;
             }
         }
-        if (checkValidTicket(tickets) == false) {
+        if (!checkValidTicket(tickets)) {
             System.out.println("Invalid number of Tickets");
         } else {
             System.out.println("Showtime not found.");
@@ -108,7 +109,8 @@ public class MovieBookingSystem extends BookingSystem {
         }
 
         for (Movie show : showTimes) {
-            if (show.getTime().equals(showTime) && checkValidTicket(tickets) == true) {
+            if (show.getTime().equals(showTime)
+                    && checkValidTicket(tickets)) {
                 if (tickets <= show.getBookedTickets()) {
                     int newAvailable = show.getAvailableTickets() + tickets;
                     int newBooked = show.getBookedTickets() - tickets;
@@ -126,7 +128,7 @@ public class MovieBookingSystem extends BookingSystem {
                 }
             }
         }
-        if (checkValidTicket(tickets) == false) {
+        if (!checkValidTicket(tickets)) {
             System.out.println("Invalid number of Tickets");
         } else {
             System.out.println("Showtime not found.");
@@ -149,12 +151,13 @@ public class MovieBookingSystem extends BookingSystem {
         System.out.println("------------------------------\n");
     }
 
-    public boolean checkValidTicket(int num) {
-        if (num > 0) {
-            return true;
-        } else {
-            return false;
-        }
+    /**
+     * Helper function for checking if the number of tickets is valid.
+     * @param num
+     * @return true return false
+     */
+    public boolean checkValidTicket(final int num) {
+        return num > 0;
     }
 
     /**
@@ -184,8 +187,8 @@ public class MovieBookingSystem extends BookingSystem {
         movie.bookTicket(notExist, ticket);
         movie.cancelReservation(notExist, ticket);
         movie.displayAllShowTimes();
-
-        movie.bookTicket("10:00 AM", -8); // dawat negative
+        final int negative = -8;
+        movie.bookTicket("10:00 AM", negative); // dawat negative
 
     }
 }
