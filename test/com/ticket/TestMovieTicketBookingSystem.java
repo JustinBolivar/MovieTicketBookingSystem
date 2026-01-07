@@ -6,6 +6,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
 class TestMovieTicketBookingSystem {
@@ -37,6 +38,24 @@ class TestMovieTicketBookingSystem {
     }
 
     @Test
+    void testBooking_BookSoldOutTicket_ShouldReturnTrue() throws Exception {
+        String time = "12:00 PM";
+        system.bookTicket(time, 50);
+        system.bookTicket(time, 1);
+
+        assertTrue(outputStreamCaptor.toString()
+                .contains("Tickets are sold out!"));
+    }
+
+    @Test
+    void testBooking_BookInvalidTimeFormat_ShouldReturnTrue() throws Exception {
+        String time = "10 AM";
+        system.bookTicket(time, 5);
+        assertTrue(outputStreamCaptor.toString().contains(
+                "Invalid time format. Please use 'HH:MM AM/PM' (e.g., 05:30 PM)."));
+    }
+
+    @Test
     void testBooking_BookNonExistingTime_ShouldReturnTrue() throws Exception {
         String time = "2:00 AM";
         system.bookTicket(time, 5);
@@ -45,7 +64,8 @@ class TestMovieTicketBookingSystem {
     }
 
     @Test
-    void testBooking_BookMoreThanCapacityOfSchedule_ShouldReturnTrue() throws Exception {
+    void testBooking_BookMoreThanCapacityOfSchedule_ShouldReturnTrue()
+            throws Exception {
         String time = "1:00 PM";
         system.bookTicket(time, 51);
 
@@ -56,7 +76,8 @@ class TestMovieTicketBookingSystem {
     }
 
     @Test
-    void testCancelReservation_SuccesfullyCancelABooking_ShouldReturnTrue() throws Exception {
+    void testCancelReservation_SuccesfullyCancelABooking_ShouldReturnTrue()
+            throws Exception {
         String time = "04:00 PM";
         system.bookTicket(time, 10);
         system.cancelReservation(time, 4);
@@ -67,7 +88,17 @@ class TestMovieTicketBookingSystem {
     }
 
     @Test
-    void testCancelReservation_CancelMoreThanBookedAmount_ShouldReturnTrue() throws Exception {
+    void testCancelReservation_CancelInvalidTimeFormat_ShouldReturnTrue()
+            throws Exception {
+        String time = "10 AM";
+        system.cancelReservation(time, 5);
+        assertTrue(outputStreamCaptor.toString().contains(
+                "Invalid time format. Please use 'HH:MM AM/PM' (e.g., 05:30 PM)."));
+    }
+
+    @Test
+    void testCancelReservation_CancelMoreThanBookedAmount_ShouldReturnTrue()
+            throws Exception {
         String time = "08:00 PM";
         system.bookTicket(time, 5);
         system.cancelReservation(time, 10); // Canceling more than booked
@@ -75,6 +106,15 @@ class TestMovieTicketBookingSystem {
         Movie movie = system.getMovie(time);
         assertEquals(45, movie.getAvailableTickets(),
                 "State should not change if cancellation is invalid");
+    }
+
+    @Test
+    void testCancelReservation_CancelNonExistingTime_ShouldReturnTrue()
+            throws Exception {
+        String time = "3:00 AM";
+        system.cancelReservation(time, 5);
+        assertTrue(
+                outputStreamCaptor.toString().contains("Showtime not found."));
     }
 
     @Test

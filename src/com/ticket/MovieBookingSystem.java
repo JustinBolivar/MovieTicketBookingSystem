@@ -23,7 +23,6 @@ public class MovieBookingSystem extends BookingSystem {
 
     /**
      * getter for the movies to be accessible in the unit test.
-     * 
      * @param time
      * @return null
      */
@@ -38,7 +37,6 @@ public class MovieBookingSystem extends BookingSystem {
 
     /**
      * Function to check the availability of a specific movie schedule.
-     * 
      * @param showTime
      */
     public void checkAvailability(final String showTime) {
@@ -53,7 +51,6 @@ public class MovieBookingSystem extends BookingSystem {
     /**
      * Function to book specific number of tickets for a specific movie
      * schedule.
-     * 
      * @param showTime
      * @param tickets
      */
@@ -62,7 +59,8 @@ public class MovieBookingSystem extends BookingSystem {
 
         if (!showTime.matches(timeRegex)) {
             System.out.println(
-                    "Invalid time format. Please use 'HH:MM AM/PM' (e.g., 05:30 PM).");
+                    "Invalid time format. Please use "
+                    + "'HH:MM AM/PM' (e.g., 05:30 PM).");
             return;
         }
 
@@ -92,7 +90,6 @@ public class MovieBookingSystem extends BookingSystem {
     /**
      * Function to cancel the previously booked tickets for a certain movie
      * schedule.
-     * 
      * @param showTime
      * @param tickets
      */
@@ -101,7 +98,8 @@ public class MovieBookingSystem extends BookingSystem {
 
         if (!showTime.matches(timeRegex)) {
             System.out.println(
-                    "Invalid time format. Please use 'HH:MM AM/PM' (e.g., 05:30 PM).");
+                    "Invalid time format. Please use "
+                    + "'HH:MM AM/PM' (e.g., 05:30 PM).");
             return;
         }
 
@@ -119,23 +117,42 @@ public class MovieBookingSystem extends BookingSystem {
                     return;
                 } else {
                     System.out.println(
-                            "Invalid operation (Attempt to cancel more tickets than booked)");
+                            "Invalid operation (Attempt to cancel "
+                            + "more tickets than booked)");
                     return;
                 }
             }
         }
-        System.out.println("Show time " + showTime + " not found.");
+        System.out.println("Showtime not found.");
+    }
+
+    /**
+     * Function to print all the movie show times.
+     */
+    public void displayAllShowTimes() {
+        System.out.println("\n--- Movie Schedule ---");
+        if (showTimes.isEmpty()) {
+            System.out.println("No showtimes available.");
+            return;
+        }
+        for (Movie show : showTimes) {
+            System.out.println("Time: " + show.getTime()
+                    + " | Available Seats: " + show.getAvailableTickets());
+        }
+        System.out.println("------------------------------\n");
     }
 
     /**
      * Main function to test and run program.
-     * 
      * @param args
      */
     public static void main(final String[] args) {
         MovieBookingSystem movie = new MovieBookingSystem();
+        movie.displayAllShowTimes();
         String am = "10:00 AM";
         String pm = "1:00 PM";
+        String format = "TenOClockAm";
+        String notExist = "3:00 AM";
         final int ticket = 5;
         final int ticket2 = 2;
         final int ticket3 = 3;
@@ -146,6 +163,11 @@ public class MovieBookingSystem extends BookingSystem {
         movie.cancelReservation(am, ticket3);
         movie.bookTicket(pm, ticket2);
         movie.cancelReservation(am, ticket);
-
+        movie.bookTicket(pm, ticket3);
+        movie.bookTicket(format, ticket);
+        movie.cancelReservation(format, ticket);
+        movie.bookTicket(notExist, ticket);
+        movie.cancelReservation(notExist, ticket);
+        movie.displayAllShowTimes();
     }
 }
